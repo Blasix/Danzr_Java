@@ -5,12 +5,14 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 
+import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class TrackScheduler extends AudioEventAdapter {
     private final AudioPlayer player;
-    private final BlockingQueue<AudioTrack> queue = new LinkedBlockingQueue<>();
+    private BlockingQueue<AudioTrack> queue = new LinkedBlockingQueue<>();
+    private boolean isLooping = false;
 
     public TrackScheduler(AudioPlayer player) {
         this.player = player;
@@ -18,7 +20,11 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-        player.startTrack(queue.poll(), false);
+        if (isLooping) {
+            player.startTrack(track.makeClone(), false);
+        } else {
+            player.startTrack(queue.poll(), false);
+        }
     }
 
     public void queue(AudioTrack track) {
@@ -33,5 +39,24 @@ public class TrackScheduler extends AudioEventAdapter {
 
     public BlockingQueue<AudioTrack> getQueue() {
         return queue;
+    }
+
+    public void toggleLooping() {
+        isLooping = !isLooping;
+    }
+
+    public boolean isLooping() {
+        return isLooping;
+    }
+
+    public void shuffleQueue() {
+        List<AudioTrack> queueCopy = new ArrayList<>();
+        List<AudioTrack> queueCopy2 = new ArrayList<>(this.queue);
+        for (int i = 0; i < queue.size(); i++) {
+            int randomIndex = new Random().nextInt(queue.size());
+            queueCopy.add(queueCopy2.get(randomIndex));
+            queueCopy2.remove(randomIndex);
+        }
+        queue = new LinkedBlockingQueue<>(queueCopy);
     }
 }

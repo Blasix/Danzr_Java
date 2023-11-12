@@ -1,16 +1,18 @@
-package commands;
+package commands.music;
 
+import commands.ICommand;
 import lavaplayer.PlayerManager;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.events.Event;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
-public class Play implements ICommand{
+public class Play implements ICommand {
     @Override
     public String getName() {
         return "play";
@@ -49,8 +51,15 @@ public class Play implements ICommand{
         }
 
         String urlOrQuery = event.getOption("url_or_query").getAsString();
+
+        try {
+            new URI(urlOrQuery);
+        } catch (URISyntaxException e) {
+            urlOrQuery = "ytsearch:" + urlOrQuery;
+        }
+
         PlayerManager playerManager = PlayerManager.get();
-        playerManager.play(event.getGuild(), urlOrQuery);
+        playerManager.play(event.getGuild(), urlOrQuery, event);
         event.reply("Playing").queue();
     }
 }

@@ -8,6 +8,7 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import java.util.*;
 
@@ -37,7 +38,7 @@ public class PlayerManager {
         });
     }
 
-    public void play(Guild guild, String trackURL) {
+    public void play(Guild guild, String trackURL, SlashCommandInteractionEvent event) {
         GuildMusicManager guildMusicManager = getGuildMusicManager(guild);
         audioPlayerManager.loadItemOrdered(guildMusicManager, trackURL, new AudioLoadResultHandler() {
             @Override
@@ -47,17 +48,24 @@ public class PlayerManager {
 
             @Override
             public void playlistLoaded(AudioPlaylist playlist) {
-
+                if (playlist.isSearchResult()) {
+                    // TODO: add menu for selecting track
+                    guildMusicManager.getTrackScheduler().queue(playlist.getTracks().get(0));
+                    return;
+                }
+                for (AudioTrack track : playlist.getTracks()) {
+                    guildMusicManager.getTrackScheduler().queue(track);
+                }
             }
 
             @Override
             public void noMatches() {
-
+                event.reply("Nothing found with " + trackURL).queue();
             }
 
             @Override
             public void loadFailed(FriendlyException exception) {
-
+                event.reply(exception.getMessage()).queue();
             }
         });
     }
