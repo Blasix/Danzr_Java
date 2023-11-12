@@ -6,6 +6,7 @@ public class Main {
         JDA jda = JDABuilder.createDefault(Secrets.getToken()).build();
         CommandManager manager = new CommandManager();
         manager.addCommand(new Sum());
+        manager.addCommand(new Play());
         jda.addEventListener(manager);
     }
 }

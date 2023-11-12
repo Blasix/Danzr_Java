@@ -3,11 +3,12 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 public class CommandManager extends ListenerAdapter {
-    private List<ICommand> commands = new ArrayList<>();
+    private final List<ICommand> commands = new ArrayList<>();
     @Override
     public void onReady(ReadyEvent event) {
         // TODO for adding global commands:
@@ -21,7 +22,7 @@ public class CommandManager extends ListenerAdapter {
     }
 
     @Override
-    public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
+    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         for (ICommand command : commands) {
             if (event.getName().equals(command.getName())) {
                 command.execute(event);
