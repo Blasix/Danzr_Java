@@ -1,6 +1,6 @@
 package commands.music;
 
-import Logic.VoiceLogic;
+import logic.VoiceLogic;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import commands.ICommand;
 import lavaplayer.GuildMusicManager;
@@ -41,6 +41,7 @@ public class NowPlaying implements ICommand {
         AudioTrackInfo trackInfo = guildMusicManager.getTrackScheduler().getPlayer().getPlayingTrack().getInfo();
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Now Playing");
+
         long hours = TimeUnit.MILLISECONDS.toHours(trackInfo.length);
         SimpleDateFormat sdf = hours > 0 ? new SimpleDateFormat("hh:mm:ss") : new SimpleDateFormat("mm:ss");
         String formattedLength = sdf.format(new Date(trackInfo.length));

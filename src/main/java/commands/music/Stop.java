@@ -1,6 +1,6 @@
 package commands.music;
 
-import Logic.VoiceLogic;
+import logic.VoiceLogic;
 import commands.ICommand;
 import lavaplayer.GuildMusicManager;
 import lavaplayer.PlayerManager;

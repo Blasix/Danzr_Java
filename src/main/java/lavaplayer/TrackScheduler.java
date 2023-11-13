@@ -50,13 +50,8 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     public void shuffleQueue() {
-        List<AudioTrack> queueCopy = new ArrayList<>();
-        List<AudioTrack> queueCopy2 = new ArrayList<>(this.queue);
-        for (int i = 0; i < queue.size(); i++) {
-            int randomIndex = new Random().nextInt(queue.size());
-            queueCopy.add(queueCopy2.get(randomIndex));
-            queueCopy2.remove(randomIndex);
-        }
+        List<AudioTrack> queueCopy = new ArrayList<>(this.queue);
+        Collections.shuffle(queueCopy);
         queue = new LinkedBlockingQueue<>(queueCopy);
     }
 }

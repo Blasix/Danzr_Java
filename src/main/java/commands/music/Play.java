@@ -2,6 +2,7 @@ package commands.music;
 
 import commands.ICommand;
 import lavaplayer.PlayerManager;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -32,10 +33,14 @@ public class Play implements ICommand {
 
     @Override
     public void execute(SlashCommandInteractionEvent event) {
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        embedBuilder.setColor(0x820000);
+
         Member member = event.getMember();
         GuildVoiceState memberVoiceState = member.getVoiceState();
         if (!memberVoiceState.inAudioChannel()) {
-            event.reply("You need to be in a voice channel to use this command").queue();
+            embedBuilder.setTitle("You need to be in a voice channel to use this command");
+            event.replyEmbeds(embedBuilder.build()).queue();
             return;
         }
 
@@ -45,7 +50,8 @@ public class Play implements ICommand {
             event.getGuild().getAudioManager().openAudioConnection(memberVoiceState.getChannel());
         } else {
             if(!memberVoiceState.getChannel().equals(selfVoiceState.getChannel())) {
-                event.reply("You need to be in the same voice channel as me to use this command").queue();
+                embedBuilder.setTitle("You need to be in the same voice channel as me to use this command");
+                event.replyEmbeds(embedBuilder.build()).queue();
                 return;
             }
         }
@@ -60,6 +66,5 @@ public class Play implements ICommand {
 
         PlayerManager playerManager = PlayerManager.get();
         playerManager.play(event.getGuild(), urlOrQuery, event);
-        event.reply("Playing").queue();
     }
 }

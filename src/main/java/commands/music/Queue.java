@@ -1,8 +1,7 @@
 package commands.music;
 
-import Logic.VoiceLogic;
+import logic.VoiceLogic;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import commands.ICommand;
 import lavaplayer.GuildMusicManager;
 import lavaplayer.PlayerManager;

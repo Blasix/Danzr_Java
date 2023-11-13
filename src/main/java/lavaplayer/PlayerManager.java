@@ -7,6 +7,8 @@ import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import logic.VoiceLogic;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
@@ -15,8 +17,8 @@ import java.util.*;
 public class PlayerManager {
 
     private static PlayerManager INSTANCE;
-    private Map<Long, GuildMusicManager> guildMusicManagers = new HashMap<>();
-    private AudioPlayerManager audioPlayerManager = new DefaultAudioPlayerManager();
+    private final Map<Long, GuildMusicManager> guildMusicManagers = new HashMap<>();
+    private final AudioPlayerManager audioPlayerManager = new DefaultAudioPlayerManager();
 
     private PlayerManager() {
         AudioSourceManagers.registerRemoteSources(audioPlayerManager);
@@ -44,6 +46,7 @@ public class PlayerManager {
             @Override
             public void trackLoaded(AudioTrack track) {
                 guildMusicManager.getTrackScheduler().queue(track);
+                event.replyEmbeds(VoiceLogic.createSongAddedEmbed(track.getInfo(), event)).queue();
             }
 
             @Override
@@ -51,21 +54,33 @@ public class PlayerManager {
                 if (playlist.isSearchResult()) {
                     // TODO: add menu for selecting track
                     guildMusicManager.getTrackScheduler().queue(playlist.getTracks().get(0));
+                    event.replyEmbeds(VoiceLogic.createSongAddedEmbed(playlist.getTracks().get(0).getInfo(), event)).queue();
                     return;
                 }
                 for (AudioTrack track : playlist.getTracks()) {
                     guildMusicManager.getTrackScheduler().queue(track);
                 }
+                EmbedBuilder embedBuilder = new EmbedBuilder();
+                embedBuilder.setTitle("Playlist added to queue");
+                embedBuilder.setDescription("Added " + playlist.getTracks().size() + " songs to the queue");
+                embedBuilder.setColor(0x008200);
+                event.replyEmbeds(embedBuilder.build()).queue();
             }
 
             @Override
             public void noMatches() {
-                event.reply("Nothing found with " + trackURL).queue();
+                EmbedBuilder embedBuilder = new EmbedBuilder();
+                embedBuilder.setTitle("Nothing found with " + trackURL);
+                embedBuilder.setColor(0x820000);
+                event.replyEmbeds(embedBuilder.build()).queue();
             }
 
             @Override
             public void loadFailed(FriendlyException exception) {
-                event.reply(exception.getMessage()).queue();
+                EmbedBuilder embedBuilder = new EmbedBuilder();
+                embedBuilder.setTitle(exception.getMessage());
+                embedBuilder.setColor(0x820000);
+                event.replyEmbeds(embedBuilder.build()).queue();
             }
         });
     }

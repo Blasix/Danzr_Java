@@ -1,11 +1,9 @@
 package commands.music;
 
-import Logic.VoiceLogic;
+import logic.VoiceLogic;
 import commands.ICommand;
 import lavaplayer.GuildMusicManager;
 import lavaplayer.PlayerManager;
-import net.dv8tion.jda.api.entities.GuildVoiceState;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
