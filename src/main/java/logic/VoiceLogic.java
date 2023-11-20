@@ -46,9 +46,8 @@ public class VoiceLogic {
     }
 
     public static MessageEmbed createSongAddedEmbed(AudioTrackInfo info, SlashCommandInteractionEvent event) {
-        //TODO check if the song is added or just started playing
         GuildMusicManager guildMusicManager = PlayerManager.get().getGuildMusicManager(event.getGuild());
-        List<AudioTrack> queue = new ArrayList<>(guildMusicManager.getTrackScheduler().getQueue());
+        List<SongInfo> queue = new ArrayList<>(guildMusicManager.getTrackScheduler().getQueue());
 
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle(queue.isEmpty()? "Song started playing" : "Song added to queue");

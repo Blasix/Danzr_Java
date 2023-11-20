@@ -4,6 +4,8 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
+import logic.SongInfo;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
@@ -11,7 +13,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class TrackScheduler extends AudioEventAdapter {
     private final AudioPlayer player;
-    private BlockingQueue<AudioTrack> queue = new LinkedBlockingQueue<>();
+    private BlockingQueue<SongInfo> queue = new LinkedBlockingQueue<>();
     private boolean isLooping = false;
 
     public TrackScheduler(AudioPlayer player) {
@@ -23,13 +25,13 @@ public class TrackScheduler extends AudioEventAdapter {
         if (isLooping) {
             player.startTrack(track.makeClone(), false);
         } else {
-            player.startTrack(queue.poll(), false);
+            player.startTrack(queue.poll().getTrack(), false);
         }
     }
 
-    public void queue(AudioTrack track) {
+    public void queue(AudioTrack track, SlashCommandInteractionEvent event) {
         if (!player.startTrack(track, true)) {
-            queue.offer(track);
+            queue.offer(new SongInfo(track, event.getUser()));
         }
     }
 
@@ -37,7 +39,7 @@ public class TrackScheduler extends AudioEventAdapter {
         return player;
     }
 
-    public BlockingQueue<AudioTrack> getQueue() {
+    public BlockingQueue<SongInfo> getQueue() {
         return queue;
     }
 
@@ -50,7 +52,7 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     public void shuffleQueue() {
-        List<AudioTrack> queueCopy = new ArrayList<>(this.queue);
+        List<SongInfo> queueCopy = new ArrayList<>(this.queue);
         Collections.shuffle(queueCopy);
         queue = new LinkedBlockingQueue<>(queueCopy);
     }

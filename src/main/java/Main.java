@@ -15,5 +15,6 @@ public class Main {
         manager.addCommand(new Shuffle());
         manager.addCommand(new Loop());
         jda.addEventListener(manager);
+        System.out.println("Bot is ready");
     }
 }

@@ -1,5 +1,6 @@
 package commands.music;
 
+import logic.SongInfo;
 import logic.VoiceLogic;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import commands.ICommand;
@@ -14,6 +15,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+// TODO - Add pagination
+// https://www.youtube.com/watch?v=IuTW7bGVK5o&list=PLMDWhd7MfizXOJXn905x8UqkWtMJ6tl-b&index=6
 
 public class Queue implements ICommand {
     @Override
@@ -36,7 +40,7 @@ public class Queue implements ICommand {
         if (VoiceLogic.checkConnection(event)) return;
 
         GuildMusicManager guildMusicManager = PlayerManager.get().getGuildMusicManager(event.getGuild());
-        List<AudioTrack> queue = new ArrayList<>(guildMusicManager.getTrackScheduler().getQueue());
+        List<SongInfo> queue = new ArrayList<>(guildMusicManager.getTrackScheduler().getQueue());
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Queue");
         if (queue.isEmpty()) {
@@ -44,12 +48,12 @@ public class Queue implements ICommand {
             return;
         }
         int i = 1;
-        for (AudioTrack track : queue) {
-            long hours = TimeUnit.MILLISECONDS.toHours(track.getInfo().length);
+        for (SongInfo songInfo : queue) {
+            long hours = TimeUnit.MILLISECONDS.toHours(songInfo.getTrack().getInfo().length);
             SimpleDateFormat sdf = hours > 0 ? new SimpleDateFormat("hh:mm:ss") : new SimpleDateFormat("mm:ss");
-            String formattedLength = sdf.format(new Date(track.getInfo().length));
+            String formattedLength = sdf.format(new Date(songInfo.getTrack().getInfo().length));
 
-            embedBuilder.addField(i + ") " + track.getInfo().title, "(" + formattedLength + ") - Song by: " + track.getInfo().author, false);
+            embedBuilder.addField(i + ") " + songInfo.getTrack().getInfo().title, "(" + formattedLength + ") - Requested by: " + songInfo.getRequester().getAsMention(), false);
             i++;
         }
         event.replyEmbeds(embedBuilder.build()).queue();

@@ -45,7 +45,7 @@ public class PlayerManager {
         audioPlayerManager.loadItemOrdered(guildMusicManager, trackURL, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
-                guildMusicManager.getTrackScheduler().queue(track);
+                guildMusicManager.getTrackScheduler().queue(track, event);
                 event.replyEmbeds(VoiceLogic.createSongAddedEmbed(track.getInfo(), event)).queue();
             }
 
@@ -53,12 +53,12 @@ public class PlayerManager {
             public void playlistLoaded(AudioPlaylist playlist) {
                 if (playlist.isSearchResult()) {
                     // TODO: add menu for selecting track
-                    guildMusicManager.getTrackScheduler().queue(playlist.getTracks().get(0));
+                    guildMusicManager.getTrackScheduler().queue(playlist.getTracks().get(0), event);
                     event.replyEmbeds(VoiceLogic.createSongAddedEmbed(playlist.getTracks().get(0).getInfo(), event)).queue();
                     return;
                 }
                 for (AudioTrack track : playlist.getTracks()) {
-                    guildMusicManager.getTrackScheduler().queue(track);
+                    guildMusicManager.getTrackScheduler().queue(track, event);
                 }
                 EmbedBuilder embedBuilder = new EmbedBuilder();
                 embedBuilder.setTitle("Playlist added to queue");
