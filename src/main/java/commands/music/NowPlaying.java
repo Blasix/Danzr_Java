@@ -6,6 +6,7 @@ import commands.ICommand;
 import lavaplayer.GuildMusicManager;
 import lavaplayer.PlayerManager;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
@@ -39,6 +40,7 @@ public class NowPlaying implements ICommand {
             return;
         }
         AudioTrackInfo trackInfo = guildMusicManager.getTrackScheduler().getPlayer().getPlayingTrack().getInfo();
+        User nowPlayingUser = guildMusicManager.getTrackScheduler().getNowPlayingUser();
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Now Playing");
 
@@ -48,6 +50,7 @@ public class NowPlaying implements ICommand {
 
         embedBuilder.setDescription("**Name:** `" + trackInfo.title + "`\n**Author:** `" + trackInfo.author + "`\n**Duration:** `" + formattedLength + "`");
         embedBuilder.setThumbnail("https://img.youtube.com/vi/" + trackInfo.identifier + "/0.jpg");
+        embedBuilder.setFooter("Requested by " + nowPlayingUser.getEffectiveName(), nowPlayingUser.getAvatarUrl());
         event.replyEmbeds(embedBuilder.build()).queue();
     }
 }
