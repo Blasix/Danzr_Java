@@ -51,6 +51,7 @@ public class NowPlaying implements ICommand {
         embedBuilder.setDescription("**Name:** `" + trackInfo.title + "`\n**Author:** `" + trackInfo.author + "`\n**Duration:** `" + formattedLength + "`");
         embedBuilder.setThumbnail("https://img.youtube.com/vi/" + trackInfo.identifier + "/0.jpg");
         embedBuilder.setFooter("Requested by " + nowPlayingUser.getEffectiveName(), nowPlayingUser.getAvatarUrl());
+        embedBuilder.setColor(0x000082);
         event.replyEmbeds(embedBuilder.build()).queue();
     }
 }

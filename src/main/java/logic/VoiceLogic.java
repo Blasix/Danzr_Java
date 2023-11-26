@@ -56,6 +56,7 @@ public class VoiceLogic {
         String formattedLength = sdf.format(new Date(info.length));
         embedBuilder.setDescription("**Name:** `" + info.title + "`\n**Author:** `" + info.author + "`\n**Duration:** `" + formattedLength + "`");
         embedBuilder.setThumbnail("https://img.youtube.com/vi/" + info.identifier + "/0.jpg");
+        embedBuilder.setFooter("Requested by " + event.getUser().getEffectiveName(), event.getUser().getAvatarUrl());
         embedBuilder.setColor(0x008200);
         return embedBuilder.build();
     }
