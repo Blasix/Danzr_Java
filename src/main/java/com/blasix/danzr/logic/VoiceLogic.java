@@ -1,13 +1,10 @@
-package logic;
+package com.blasix.danzr.logic;
 
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
-import lavaplayer.GuildMusicManager;
-import lavaplayer.PlayerManager;
+import com.blasix.danzr.lavaplayer.GuildMusicManager;
+import com.blasix.danzr.lavaplayer.PlayerManager;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.GuildVoiceState;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import java.text.SimpleDateFormat;
@@ -45,8 +42,8 @@ public class VoiceLogic {
         return false;
     }
 
-    public static MessageEmbed createSongAddedEmbed(AudioTrackInfo info, SlashCommandInteractionEvent event) {
-        GuildMusicManager guildMusicManager = PlayerManager.get().getGuildMusicManager(event.getGuild());
+    public static MessageEmbed createSongAddedEmbed(AudioTrackInfo info, User user, Guild guild) {
+        GuildMusicManager guildMusicManager = PlayerManager.get().getGuildMusicManager(guild);
         List<SongInfo> queue = new ArrayList<>(guildMusicManager.getTrackScheduler().getQueue());
 
         EmbedBuilder embedBuilder = new EmbedBuilder();
@@ -56,7 +53,7 @@ public class VoiceLogic {
         String formattedLength = sdf.format(new Date(info.length));
         embedBuilder.setDescription("**Name:** `" + info.title + "`\n**Author:** `" + info.author + "`\n**Duration:** `" + formattedLength + "`");
         embedBuilder.setThumbnail("https://img.youtube.com/vi/" + info.identifier + "/0.jpg");
-        embedBuilder.setFooter("Requested by " + event.getUser().getEffectiveName(), event.getUser().getAvatarUrl());
+        embedBuilder.setFooter("Requested by " + user.getEffectiveName(), user.getAvatarUrl());
         embedBuilder.setColor(0x008200);
         return embedBuilder.build();
     }

@@ -1,23 +1,24 @@
-package commands.music;
+package com.blasix.danzr.commands.music;
 
-import logic.VoiceLogic;
-import commands.ICommand;
-import lavaplayer.GuildMusicManager;
-import lavaplayer.PlayerManager;
+import com.blasix.danzr.logic.VoiceLogic;
+import com.blasix.danzr.commands.ICommand;
+import com.blasix.danzr.lavaplayer.GuildMusicManager;
+import com.blasix.danzr.lavaplayer.PlayerManager;
+import com.blasix.danzr.lavaplayer.TrackScheduler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import java.util.List;
 
-public class Skip implements ICommand {
+public class Shuffle implements ICommand {
     @Override
     public String getName() {
-        return "skip";
+        return "shuffle";
     }
 
     @Override
     public String getDescription() {
-        return "Skips the current song";
+        return "Shuffle the queue";
     }
 
     @Override
@@ -29,13 +30,13 @@ public class Skip implements ICommand {
     public void execute(SlashCommandInteractionEvent event) {
         if (VoiceLogic.checkConnection(event)) return;
 
-
         GuildMusicManager guildMusicManager = PlayerManager.get().getGuildMusicManager(event.getGuild());
         if (guildMusicManager.getTrackScheduler().getPlayer().getPlayingTrack() == null) {
-            event.reply("There is no song playing").queue();
+            event.reply("There are no songs in the queue").queue();
             return;
         }
-        guildMusicManager.getTrackScheduler().getPlayer().stopTrack();
-        event.reply("Skipped the current song").queue();
+        TrackScheduler trackScheduler = guildMusicManager.getTrackScheduler();
+        trackScheduler.shuffleQueue();
+        event.reply("Shuffled the queue").queue();
     }
 }

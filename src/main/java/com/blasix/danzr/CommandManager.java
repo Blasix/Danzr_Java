@@ -1,5 +1,7 @@
-import commands.ICommand;
-import commands.ICommandButtons;
+package com.blasix.danzr;
+
+import com.blasix.danzr.commands.ICommand;
+import com.blasix.danzr.commands.ICommandButtons;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
@@ -13,7 +15,7 @@ public class CommandManager extends ListenerAdapter {
     private final List<ICommand> commands = new ArrayList<>();
     @Override
     public void onReady(ReadyEvent event) {
-        // TODO for adding global commands:
+        // TODO for adding global com.blasix.danzr.commands:
         // replace guild with just event.getJDA()
 
         Guild guild = event.getJDA().getGuildById(767435347050758164L);

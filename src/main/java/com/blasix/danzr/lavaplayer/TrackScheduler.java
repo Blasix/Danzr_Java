@@ -1,12 +1,11 @@
-package lavaplayer;
+package com.blasix.danzr.lavaplayer;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
-import logic.SongInfo;
+import com.blasix.danzr.logic.SongInfo;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
@@ -32,11 +31,11 @@ public class TrackScheduler extends AudioEventAdapter {
             nowPlayingUser = q.getRequester();
         }
     }
-    public void queue(AudioTrack track, SlashCommandInteractionEvent event) {
+    public void queue(AudioTrack track, User user) {
         if (!player.startTrack(track, true)) {
-            queue.offer(new SongInfo(track, event.getUser()));
+            queue.offer(new SongInfo(track, user));
         } else {
-            nowPlayingUser = event.getUser();
+            nowPlayingUser = user;
         }
     }
 

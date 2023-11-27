@@ -1,4 +1,4 @@
-package logic;
+package com.blasix.danzr.logic;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.entities.User;

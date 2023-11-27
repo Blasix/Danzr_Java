@@ -1,10 +1,10 @@
-package commands.music;
+package com.blasix.danzr.commands.music;
 
-import logic.VoiceLogic;
-import commands.ICommand;
-import lavaplayer.GuildMusicManager;
-import lavaplayer.PlayerManager;
-import lavaplayer.TrackScheduler;
+import com.blasix.danzr.logic.VoiceLogic;
+import com.blasix.danzr.commands.ICommand;
+import com.blasix.danzr.lavaplayer.GuildMusicManager;
+import com.blasix.danzr.lavaplayer.PlayerManager;
+import com.blasix.danzr.lavaplayer.TrackScheduler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 

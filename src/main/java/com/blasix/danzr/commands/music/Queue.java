@@ -1,18 +1,14 @@
-package commands.music;
+package com.blasix.danzr.commands.music;
 
-import commands.ICommandButtons;
-import logic.SongInfo;
-import logic.VoiceLogic;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import commands.ICommand;
-import lavaplayer.GuildMusicManager;
-import lavaplayer.PlayerManager;
+import com.blasix.danzr.commands.ICommandButtons;
+import com.blasix.danzr.logic.SongInfo;
+import com.blasix.danzr.logic.VoiceLogic;
+import com.blasix.danzr.lavaplayer.GuildMusicManager;
+import com.blasix.danzr.lavaplayer.PlayerManager;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-import net.dv8tion.jda.api.interactions.components.ItemComponent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
@@ -21,16 +17,12 @@ import net.dv8tion.jda.api.utils.messages.MessageEditData;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-// TODO - Add pagination
-// https://www.youtube.com/watch?v=IuTW7bGVK5o&list=PLMDWhd7MfizXOJXn905x8UqkWtMJ6tl-b&index=6
-
 public class Queue implements ICommandButtons {
-    private double sep = 8.0;
+    private final double sep = 8.0;
     @Override
     public String getName() {
         return "queue";
@@ -63,10 +55,7 @@ public class Queue implements ICommandButtons {
             return;
         }
         int i = 1;
-        int sepcur;
-        if (sep < queue.size()) sepcur = (int) sep;
-        else sepcur = queue.size();
-        for (int j = 0; j < sepcur; j++) {
+        for (int j = 0; j < Math.min(sep, queue.size()); j++) {
             SongInfo songInfo = queue.get(j);
             long hours = TimeUnit.MILLISECONDS.toHours(songInfo.getTrack().getInfo().length);
             SimpleDateFormat sdf = hours > 0 ? new SimpleDateFormat("hh:mm:ss") : new SimpleDateFormat("mm:ss");
@@ -102,42 +91,12 @@ public class Queue implements ICommandButtons {
         } else if (event.getComponentId().equals("last")) {
             editMessage(event, -1);
         }
-
-
-//        GuildMusicManager guildMusicManager = PlayerManager.get().getGuildMusicManager(event.getGuild());
-//        List<SongInfo> queue = new ArrayList<>(guildMusicManager.getTrackScheduler().getQueue());
-//        int maxPage = (int) Math.ceil(queue.size() / 10.0);
-//        if (page > maxPage) {
-//            page = maxPage;
-//        }
-//        if (page < 1) {
-//            page = 1;
-//        }
-//        EmbedBuilder embedBuilder = new EmbedBuilder();
-//        embedBuilder.setTitle("Queue");
-//        embedBuilder.setColor(0x000082);
-//        if (queue.isEmpty()) {
-//            embedBuilder.setDescription("The queue is empty");
-//            event.replyEmbeds(embedBuilder.build()).queue();
-//            return;
-//        }
-//        int i = 1;
-//        for (SongInfo songInfo : queue) {
-//            long hours = TimeUnit.MILLISECONDS.toHours(songInfo.getTrack().getInfo().length);
-//            SimpleDateFormat sdf = hours > 0 ? new SimpleDateFormat("hh:mm:ss") : new SimpleDateFormat("mm:ss");
-//            String formattedLength = sdf.format(new Date(songInfo.getTrack().getInfo().length));
-//
-//            embedBuilder.addField(i + ") " + songInfo.getTrack().getInfo().title, "(" + formattedLength + ") - Requested by: " + songInfo.getRequester().getAsMention(), false);
-//            i++;
-//        }
-//        embedBuilder.setFooter("Page " + page + " of " + maxPage);
-//        event.editMessageEmbeds(embedBuilder.build()).queue();
     }
 
     private void editMessage(ButtonInteractionEvent event, int page) {
         GuildMusicManager guildMusicManager = PlayerManager.get().getGuildMusicManager(event.getGuild());
         List<SongInfo> queue = new ArrayList<>(guildMusicManager.getTrackScheduler().getQueue());
-        int maxPage = (int) Math.ceil(queue.size() / 10.0);
+        int maxPage = (int) Math.ceil(queue.size() / sep);
 
         if (page == -1) {
             page = maxPage;

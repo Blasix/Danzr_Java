@@ -1,7 +1,7 @@
-package commands.music;
+package com.blasix.danzr.commands.music;
 
-import commands.ICommand;
-import lavaplayer.PlayerManager;
+import com.blasix.danzr.commands.ICommand;
+import com.blasix.danzr.lavaplayer.PlayerManager;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;

@@ -1,5 +1,6 @@
-package lavaplayer;
+package com.blasix.danzr.lavaplayer;
 
+import com.blasix.danzr.logic.SelectSong;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
@@ -7,7 +8,7 @@ import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import logic.VoiceLogic;
+import com.blasix.danzr.logic.VoiceLogic;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -45,20 +46,20 @@ public class PlayerManager {
         audioPlayerManager.loadItemOrdered(guildMusicManager, trackURL, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
-                guildMusicManager.getTrackScheduler().queue(track, event);
-                event.replyEmbeds(VoiceLogic.createSongAddedEmbed(track.getInfo(), event)).queue();
+                guildMusicManager.getTrackScheduler().queue(track, event.getUser());
+                event.replyEmbeds(VoiceLogic.createSongAddedEmbed(track.getInfo(), event.getUser(), event.getGuild())).queue();
             }
 
             @Override
             public void playlistLoaded(AudioPlaylist playlist) {
                 if (playlist.isSearchResult()) {
-                    // TODO: add menu for selecting track
-                    guildMusicManager.getTrackScheduler().queue(playlist.getTracks().get(0), event);
-                    event.replyEmbeds(VoiceLogic.createSongAddedEmbed(playlist.getTracks().get(0).getInfo(), event)).queue();
+                    SelectSong.guildMusicManager = guildMusicManager;
+                    SelectSong.playlist = playlist;
+                    SelectSong.displayMenu(event);
                     return;
                 }
                 for (AudioTrack track : playlist.getTracks()) {
-                    guildMusicManager.getTrackScheduler().queue(track, event);
+                    guildMusicManager.getTrackScheduler().queue(track, event.getUser());
                 }
                 EmbedBuilder embedBuilder = new EmbedBuilder();
                 embedBuilder.setTitle("Playlist added to queue");
