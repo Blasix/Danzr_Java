@@ -4,6 +4,7 @@ import com.blasix.danzr.logic.VoiceLogic;
 import com.blasix.danzr.commands.ICommand;
 import com.blasix.danzr.lavaplayer.GuildMusicManager;
 import com.blasix.danzr.lavaplayer.PlayerManager;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
@@ -28,13 +29,14 @@ public class Loop implements ICommand {
     @Override
     public void execute(SlashCommandInteractionEvent event) {
         if (VoiceLogic.checkConnection(event)) return;
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        embedBuilder.setColor(0x820000);
 
         GuildMusicManager guildMusicManager = PlayerManager.get().getGuildMusicManager(event.getGuild());
-        if (guildMusicManager.getTrackScheduler().getPlayer().getPlayingTrack() == null) {
-            event.reply("There are no songs in the queue").queue();
-            return;
-        }
+        boolean looping = guildMusicManager.getTrackScheduler().isLooping();
         guildMusicManager.getTrackScheduler().toggleLooping();
-        event.reply("Looping is now: " + guildMusicManager.getTrackScheduler().isLooping()).queue();
+        if (looping) embedBuilder.setTitle("Stopped looping the queue");
+        else embedBuilder.setTitle("Looping the queue");
+        event.replyEmbeds(embedBuilder.build()).queue();
     }
 }

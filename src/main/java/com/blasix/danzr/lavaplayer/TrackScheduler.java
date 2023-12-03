@@ -22,13 +22,11 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-        if (isLooping) {
-            player.startTrack(track.makeClone(), false);
-        } else {
-            SongInfo q = queue.poll();
-            player.startTrack(q.getTrack(), false);
-            nowPlayingUser = q.getRequester();
-        }
+        SongInfo q = queue.poll();
+        player.startTrack(q.getTrack(), false);
+        if (isLooping) queue.offer(q);
+        nowPlayingUser = q.getRequester();
+
     }
     public void queue(AudioTrack track, User user, boolean priority) {
         if (!player.startTrack(track, true)) {
