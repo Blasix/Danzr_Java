@@ -42,4 +42,4 @@ bin/
 .DS_Store
 
 ### Secrets ###
-src/main/java/com/blasix/danzr/Secrets.java
+src/main/resources/config.txt

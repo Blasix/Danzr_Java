@@ -41,6 +41,7 @@ public class Queue implements ICommandButtons {
     @Override
     public void execute(SlashCommandInteractionEvent event) {
         if (VoiceLogic.checkConnection(event)) return;
+        long totalTime = 0;
 
         GuildMusicManager guildMusicManager = PlayerManager.get().getGuildMusicManager(event.getGuild());
         List<SongInfo> queue = new ArrayList<>(guildMusicManager.getTrackScheduler().getQueue());
@@ -54,6 +55,11 @@ public class Queue implements ICommandButtons {
             event.replyEmbeds(embedBuilder.build()).queue();
             return;
         }
+
+        for (SongInfo songInfo : queue) {
+            totalTime += songInfo.getTrack().getInfo().length;
+        }
+
         int i = 1;
         for (int j = 0; j < Math.min(sep, queue.size()); j++) {
             SongInfo songInfo = queue.get(j);
@@ -61,11 +67,16 @@ public class Queue implements ICommandButtons {
             SimpleDateFormat sdf = hours > 0 ? new SimpleDateFormat("hh:mm:ss") : new SimpleDateFormat("mm:ss");
             String formattedLength = sdf.format(new Date(songInfo.getTrack().getInfo().length));
 
+
             embedBuilder.addField(i + ") " + songInfo.getTrack().getInfo().title, "(" + formattedLength + ") - Requested by: " + songInfo.getRequester().getAsMention(), false);
             i++;
         }
 
-        embedBuilder.setFooter("Page 1 of " + maxPage);
+        long hours = TimeUnit.MILLISECONDS.toHours(totalTime);
+        SimpleDateFormat sdf = hours > 0 ? new SimpleDateFormat("hh:mm:ss") : new SimpleDateFormat("mm:ss");
+        String formattedLength = sdf.format(new Date(totalTime));
+
+        embedBuilder.setFooter("Page 1 of " + maxPage + " - Total length: " + formattedLength);
 
         Button firstButton = Button.primary("first", "|<");
         Button previousButton = Button.primary("previous", "<");
@@ -97,6 +108,7 @@ public class Queue implements ICommandButtons {
         GuildMusicManager guildMusicManager = PlayerManager.get().getGuildMusicManager(event.getGuild());
         List<SongInfo> queue = new ArrayList<>(guildMusicManager.getTrackScheduler().getQueue());
         int maxPage = (int) Math.ceil(queue.size() / sep);
+        long totalTime = 0;
 
         if (page == -1) {
             page = maxPage;
@@ -124,6 +136,11 @@ public class Queue implements ICommandButtons {
         if (end > queue.size()) {
             end = queue.size();
         }
+
+        for (SongInfo songInfo : queue) {
+            totalTime += songInfo.getTrack().getInfo().length;
+        }
+
         for (int j = start; j < end; j++) {
             SongInfo songInfo = queue.get(j);
             long hours = TimeUnit.MILLISECONDS.toHours(songInfo.getTrack().getInfo().length);
@@ -133,7 +150,11 @@ public class Queue implements ICommandButtons {
             embedBuilder.addField(j+1 + ") " + songInfo.getTrack().getInfo().title, "(" + formattedLength + ") - Requested by: " + songInfo.getRequester().getAsMention(), false);
         }
 
-        embedBuilder.setFooter("Page " + page + " of " + maxPage);
+        long hours = TimeUnit.MILLISECONDS.toHours(totalTime);
+        SimpleDateFormat sdf = hours > 0 ? new SimpleDateFormat("hh:mm:ss") : new SimpleDateFormat("mm:ss");
+        String formattedLength = sdf.format(new Date(totalTime));
+
+        embedBuilder.setFooter("Page " + page + " of " + maxPage + " - Total length: " + formattedLength);
 
         Button firstButton = Button.primary("first", "|<");
         Button previousButton = Button.primary("previous", "<");
