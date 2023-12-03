@@ -41,12 +41,12 @@ public class PlayerManager {
         });
     }
 
-    public void play(Guild guild, String trackURL, SlashCommandInteractionEvent event) {
+    public void play(Guild guild, String trackURL, SlashCommandInteractionEvent event, boolean priority) {
         GuildMusicManager guildMusicManager = getGuildMusicManager(guild);
         audioPlayerManager.loadItemOrdered(guildMusicManager, trackURL, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
-                guildMusicManager.getTrackScheduler().queue(track, event.getUser());
+                guildMusicManager.getTrackScheduler().queue(track, event.getUser(), priority);
                 event.replyEmbeds(VoiceLogic.createSongAddedEmbed(track.getInfo(), event.getUser(), event.getGuild())).queue();
             }
 
@@ -55,11 +55,12 @@ public class PlayerManager {
                 if (playlist.isSearchResult()) {
                     SelectSong.guildMusicManager = guildMusicManager;
                     SelectSong.playlist = playlist;
+                    SelectSong.priority = priority;
                     SelectSong.displayMenu(event);
                     return;
                 }
                 for (AudioTrack track : playlist.getTracks()) {
-                    guildMusicManager.getTrackScheduler().queue(track, event.getUser());
+                    guildMusicManager.getTrackScheduler().queue(track, event.getUser(), priority);
                 }
                 EmbedBuilder embedBuilder = new EmbedBuilder();
                 embedBuilder.setTitle("Playlist added to queue");

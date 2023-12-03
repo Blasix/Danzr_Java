@@ -27,7 +27,8 @@ public class Play implements ICommand {
     @Override
     public List<OptionData> getOptions() {
         return List.of(
-                new OptionData(OptionType.STRING, "url_or_query", "The url or query you want to play").setRequired(true)
+                new OptionData(OptionType.STRING, "url_or_query", "The url or query you want to play").setRequired(true),
+                new OptionData(OptionType.BOOLEAN, "priority", "If the song should be played next")
         );
     }
 
@@ -58,6 +59,11 @@ public class Play implements ICommand {
 
         String urlOrQuery = event.getOption("url_or_query").getAsString();
 
+        boolean priority = false;
+        try {
+            priority = event.getOption("priority").getAsBoolean();
+        } catch (NullPointerException ignored) {}
+
         try {
             new URI(urlOrQuery);
         } catch (URISyntaxException e) {
@@ -65,6 +71,6 @@ public class Play implements ICommand {
         }
 
         PlayerManager playerManager = PlayerManager.get();
-        playerManager.play(event.getGuild(), urlOrQuery, event);
+        playerManager.play(event.getGuild(), urlOrQuery, event, priority);
     }
 }

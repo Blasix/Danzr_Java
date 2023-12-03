@@ -5,7 +5,6 @@ import com.blasix.danzr.logic.SelectSong;
 import net.dv8tion.jda.api.*;
 
 import java.io.*;
-import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
@@ -36,6 +35,7 @@ public class Main {
         manager.addCommand(new NowPlaying());
         manager.addCommand(new Shuffle());
         manager.addCommand(new Loop());
+        manager.addCommand(new Pause());
         jda.addEventListener(manager);
         jda.addEventListener(new SelectSong());
         System.out.println("Bot is ready");

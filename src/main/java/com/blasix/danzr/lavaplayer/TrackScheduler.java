@@ -8,12 +8,11 @@ import com.blasix.danzr.logic.SongInfo;
 import net.dv8tion.jda.api.entities.User;
 
 import java.util.*;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.*;
 
 public class TrackScheduler extends AudioEventAdapter {
     private final AudioPlayer player;
-    private BlockingQueue<SongInfo> queue = new LinkedBlockingQueue<>();
+    private BlockingDeque<SongInfo> queue = new LinkedBlockingDeque<>();
     private User nowPlayingUser = null;
     private boolean isLooping = false;
 
@@ -31,9 +30,10 @@ public class TrackScheduler extends AudioEventAdapter {
             nowPlayingUser = q.getRequester();
         }
     }
-    public void queue(AudioTrack track, User user) {
+    public void queue(AudioTrack track, User user, boolean priority) {
         if (!player.startTrack(track, true)) {
-            queue.offer(new SongInfo(track, user));
+            if (priority) queue.offerFirst(new SongInfo(track, user));
+            else queue.offer(new SongInfo(track, user));
         } else {
             nowPlayingUser = user;
         }
@@ -62,6 +62,6 @@ public class TrackScheduler extends AudioEventAdapter {
     public void shuffleQueue() {
         List<SongInfo> queueCopy = new ArrayList<>(this.queue);
         Collections.shuffle(queueCopy);
-        queue = new LinkedBlockingQueue<>(queueCopy);
+        queue = new LinkedBlockingDeque<>(queueCopy);
     }
 }
