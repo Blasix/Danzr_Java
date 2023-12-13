@@ -24,9 +24,10 @@ public class TrackScheduler extends AudioEventAdapter {
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         SongInfo q = queue.poll();
         player.startTrack(q.getTrack(), false);
-        if (isLooping) queue.offer(q);
         nowPlayingUser = q.getRequester();
-
+        if (isLooping) {
+            queue.offer(q);
+        }
     }
     public void queue(AudioTrack track, User user, boolean priority) {
         if (!player.startTrack(track, true)) {

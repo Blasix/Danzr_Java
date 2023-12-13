@@ -30,7 +30,7 @@ public class Loop implements ICommand {
     public void execute(SlashCommandInteractionEvent event) {
         if (VoiceLogic.checkConnection(event)) return;
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setColor(0x820000);
+        embedBuilder.setColor(0x000082);
 
         GuildMusicManager guildMusicManager = PlayerManager.get().getGuildMusicManager(event.getGuild());
         boolean looping = guildMusicManager.getTrackScheduler().isLooping();
