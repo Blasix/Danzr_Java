@@ -2,32 +2,67 @@ import commands.music.*;
 import logic.SelectSong;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.exceptions.InvalidTokenException;
 
-import java.io.*;
+import javax.swing.*;
+import java.awt.*;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        String token;
+    public static void main(String[] args) {
+        String token = null;
+        Scanner scanner = null;
         if (args.length > 0) {
             token = args[0];
         } else {
-            System.out.println("Please enter your bot token as an argument");
-            return;
-//            try {
-//                Scanner scanner = new Scanner(new File("src/main/resources/config.txt"));
-//                token = scanner.nextLine().split("=")[1];
-//            } catch (FileNotFoundException e) {
-//                System.out.println("Please enter your bot token: ");
-//                Scanner scanner = new Scanner(System.in);
-//                token = scanner.nextLine();
-//                Writer writer = new FileWriter("src/main/resources/config.txt");
-//                writer.write("TOKEN=" + token);
-//                writer.close();
-//            }
+            if (!GraphicsEnvironment.isHeadless()) {
+                while (token == null || token.isEmpty()) {
+                    token = JOptionPane.showInputDialog("Please enter your bot token:");
+                    if (token == null) {
+                        System.out.println("Bot token is required to run the application.");
+                        System.exit(0);
+                    }
+                }
+            } else {
+                scanner = new Scanner(System.in);
+                while (token == null || token.isEmpty()) {
+                    System.out.println("Please enter your bot token:");
+                    token = scanner.nextLine();
+                    if (token == null) {
+                        System.out.println("Bot token is required to run the application.");
+                        System.exit(0);
+                    }
+                }
+            }
         }
 
-        JDA jda = JDABuilder.createDefault(token).build();
+        JDA jda = null;
+        while (jda == null) {
+            try {
+                jda = JDABuilder.createDefault(token).build();
+            } catch (InvalidTokenException e) {
+                if (!GraphicsEnvironment.isHeadless()) {
+                    token = JOptionPane.showInputDialog(e.getMessage() + "\n\nPlease try another bot token:");
+                    if (token == null || token.isEmpty()) {
+                        System.out.println("Bot token is required to run the application.");
+                        System.exit(0);
+                    }
+                } else {
+                    System.out.println(e.getMessage() + "\n\nPlease try another bot token:");
+                    assert scanner != null;
+                    token = scanner.nextLine();
+                    if (token == null || token.isEmpty()) {
+                        System.out.println("Bot token is required to run the application.");
+                        System.exit(0);
+                    }
+                }
+            }
+        }
+
+        if (scanner != null) {
+            scanner.close();
+        }
+
         CommandManager manager = new CommandManager();
         manager.addCommand(new Play());
         manager.addCommand(new Stop());
