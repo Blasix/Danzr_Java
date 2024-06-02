@@ -5,10 +5,6 @@ import lavaplayer.*;
 import logic.VoiceLogic;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-
-import java.util.List;
-
 public class Shuffle implements ICommand {
     @Override
     public String getName() {
@@ -18,11 +14,6 @@ public class Shuffle implements ICommand {
     @Override
     public String getDescription() {
         return "Shuffle the queue";
-    }
-
-    @Override
-    public List<OptionData> getOptions() {
-        return null;
     }
 
     @Override

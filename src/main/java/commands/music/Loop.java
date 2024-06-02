@@ -6,9 +6,6 @@ import lavaplayer.PlayerManager;
 import logic.VoiceLogic;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-
-import java.util.List;
 
 public class Loop implements ICommand {
     @Override
@@ -19,11 +16,6 @@ public class Loop implements ICommand {
     @Override
     public String getDescription() {
         return "Toggle looping of the queue";
-    }
-
-    @Override
-    public List<OptionData> getOptions() {
-        return null;
     }
 
     @Override

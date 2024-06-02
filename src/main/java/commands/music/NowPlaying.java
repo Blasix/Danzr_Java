@@ -8,11 +8,9 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class NowPlaying implements ICommand {
@@ -24,11 +22,6 @@ public class NowPlaying implements ICommand {
     @Override
     public String getDescription() {
         return "Check what song is currently playing";
-    }
-
-    @Override
-    public List<OptionData> getOptions() {
-        return null;
     }
 
     @Override

@@ -4,9 +4,6 @@ import commands.ICommand;
 import lavaplayer.*;
 import logic.VoiceLogic;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-
-import java.util.List;
 
 public class Stop implements ICommand {
     @Override
@@ -17,11 +14,6 @@ public class Stop implements ICommand {
     @Override
     public String getDescription() {
         return "Stops playing music";
-    }
-
-    @Override
-    public List<OptionData> getOptions() {
-        return null;
     }
 
     @Override

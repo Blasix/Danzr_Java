@@ -1,3 +1,5 @@
+<img align="right" height="100" src="https://blasix.com/assets/logo/danzr.png" alt="Danzr">
+
 # Danzr
 Do you need a self-hosted discord bot that can play music, even from YouTube. Then danzr is the bot you need!
 

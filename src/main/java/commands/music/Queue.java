@@ -6,7 +6,6 @@ import logic.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
@@ -29,11 +28,6 @@ public class Queue implements ICommandButtons {
     @Override
     public String getDescription() {
         return "Check the queue";
-    }
-
-    @Override
-    public List<OptionData> getOptions() {
-        return null;
     }
 
     @Override
