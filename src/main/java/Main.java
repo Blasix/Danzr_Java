@@ -4,7 +4,6 @@ import commands.other.Info;
 import logic.SelectSong;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.exceptions.InvalidTokenException;
 
 import javax.swing.*;
@@ -86,7 +85,7 @@ public class Main {
         jda.addEventListener(new SelectSong());
 
         // INFORMATION
-        jda.getPresence().setActivity(Activity.playing("danzr.blasix.com"));
+//        jda.getPresence().setActivity(Activity.playing("danzr.blasix.com"));
         System.out.println("Bot is ready");
     }
 }

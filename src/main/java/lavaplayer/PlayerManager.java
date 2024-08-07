@@ -1,5 +1,6 @@
 package lavaplayer;
 
+import dev.lavalink.youtube.YoutubeAudioSourceManager;
 import logic.SelectSong;
 import logic.VoiceLogic;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
@@ -21,9 +22,12 @@ public class PlayerManager {
     private static PlayerManager INSTANCE;
     private final Map<Long, GuildMusicManager> guildMusicManagers = new HashMap<>();
     private final AudioPlayerManager audioPlayerManager = new DefaultAudioPlayerManager();
+    YoutubeAudioSourceManager ytSourceManager = new dev.lavalink.youtube.YoutubeAudioSourceManager();
 
     private PlayerManager() {
-        AudioSourceManagers.registerRemoteSources(audioPlayerManager);
+        audioPlayerManager.registerSourceManager(ytSourceManager);
+        AudioSourceManagers.registerRemoteSources(audioPlayerManager,
+                com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager.class);
         AudioSourceManagers.registerLocalSource(audioPlayerManager);
     }
 
