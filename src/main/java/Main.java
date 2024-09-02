@@ -5,6 +5,9 @@ import logic.SelectSong;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.exceptions.InvalidTokenException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,6 +15,10 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        // Set the log level for YoutubeOauth2Handler to INFO
+        Logger.getLogger("dev.lavalink.youtube.http.YoutubeOauth2Handler").setLevel(Level.INFO);
+
+
         String token = null;
         Scanner scanner = null;
         if (args.length > 0) {
