@@ -10,13 +10,10 @@ import net.dv8tion.jda.api.entities.User;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingDeque;
 
 public class TrackScheduler extends AudioEventAdapter {
     private final AudioPlayer player;
-    private BlockingDeque<SongInfo> queue = new LinkedBlockingDeque<>();
+    private List<SongInfo> queue = new ArrayList<>();
     private User nowPlayingUser = null;
     private boolean isLooping = false;
 
@@ -26,17 +23,21 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-        SongInfo q = queue.poll();
+        SongInfo q = queue.remove(0);
         player.startTrack(q.getTrack(), false);
         nowPlayingUser = q.getRequester();
         if (isLooping) {
-            queue.offer(q);
+            queue.add(q);
         }
     }
-    public void queue(AudioTrack track, User user, boolean priority) {
+    public void queue(AudioTrack track, User user, boolean priority, boolean shuffle) {
         if (!player.startTrack(track, true)) {
-            if (priority) queue.offerFirst(new SongInfo(track, user));
-            else queue.offer(new SongInfo(track, user));
+            if (priority) queue.add(0, new SongInfo(track, user));
+            if (shuffle) {
+                int randomIndex = (int) (Math.random() * (queue.size() + 1));
+                queue.add(randomIndex, new SongInfo(track, user));
+            }
+            else queue.add(new SongInfo(track, user));
         } else {
             nowPlayingUser = user;
         }
@@ -46,7 +47,7 @@ public class TrackScheduler extends AudioEventAdapter {
         return player;
     }
 
-    public BlockingQueue<SongInfo> getQueue() {
+    public List<SongInfo> getQueue() {
         return queue;
     }
 
@@ -63,8 +64,6 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     public void shuffleQueue() {
-        List<SongInfo> queueCopy = new ArrayList<>(this.queue);
-        Collections.shuffle(queueCopy);
-        queue = new LinkedBlockingDeque<>(queueCopy);
+        Collections.shuffle(queue);
     }
 }

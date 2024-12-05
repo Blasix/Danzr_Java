@@ -24,6 +24,7 @@ public class SelectSong extends ListenerAdapter {
     public static AudioPlaylist playlist;
     public static GuildMusicManager guildMusicManager;
     public static boolean priority;
+    public static boolean shuffle;
 
     public static void displayMenu(SlashCommandInteractionEvent event) {
         int AOB = Math.min(playlist.getTracks().size(), 5);
@@ -54,7 +55,7 @@ public class SelectSong extends ListenerAdapter {
     public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
         if (event.getComponentId().startsWith("select_song_")) {
             int index = Integer.parseInt(event.getComponentId().substring(12));
-            guildMusicManager.getTrackScheduler().queue(playlist.getTracks().get(index), event.getUser(), priority);
+            guildMusicManager.getTrackScheduler().queue(playlist.getTracks().get(index), event.getUser(), priority, shuffle);
             MessageEditData message = new MessageEditBuilder()
                     .setEmbeds(VoiceLogic.createSongAddedEmbed(playlist.getTracks().get(index).getInfo(), event.getUser(), event.getGuild()))
                     .setComponents()
